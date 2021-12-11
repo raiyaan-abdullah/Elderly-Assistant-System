@@ -1,0 +1,10 @@
+Test results:
+4/4 [==============================] - 1s 124ms/step - loss: 0.1171 - accuracy: 0.9583
+4/4 [==============================] - 1s 26ms/step
+Accuracy: 0.958333
+Precision: 0.936508
+Recall: 0.983333
+F1 score: 0.959350
+Confusion matrix:
+[[56  4]
+ [ 1 59]]

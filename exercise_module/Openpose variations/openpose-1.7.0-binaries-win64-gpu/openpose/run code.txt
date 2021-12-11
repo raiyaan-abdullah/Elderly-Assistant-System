@@ -1,0 +1,11 @@
+conda create -n py37 python=3.7 anaconda
+pip install opencv-python
+
+conda activate py37
+
+d:
+
+cd D:\Elderly Assistant External files\Exercise Videos\Openpose variations\openpose-1.7.0-binaries-win64-gpu\openpose\python
+
+python openpose_python.py --image_dir ../examples/for_paper/ --write_images output_image_folder/ 
+python openpose_python.py --video ../arm_move_good/1-s-ptrc1.mp4 --write_json output_json_folder/

@@ -1,0 +1,450 @@
+ex_3 - orig - 20211008-020245
+--------------------------------
+Test results:
+1/1 [==============================] - 0s 19ms/step - loss: 0.8064 - accuracy: 0.8000
+1/1 [==============================] - 0s 53ms/step
+Accuracy: 0.800000
+Precision: 0.800000
+Recall: 0.800000
+F1 score: 0.800000
+Confusion matrix:
+[[8 2]
+ [2 8]]
+
+# define cnn model
+def define_model(video_y , video_x):
+    model = Sequential()
+ 
+    model.add(Conv2D(64, (5, 5), activation='relu',input_shape=(video_y , video_x, 3))) #64 (3,3) for exercise 1a
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((11, 11)))
+
+    '''
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+    '''
+
+    model.add(Flatten())
+    
+    model.add(Dropout(0.6)) #0.3 for 1a
+    
+    model.add(Dense(32, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu')) #64 for 1a
+    model.add(Dropout(0.2)) #0.3 for 1a
+    model.add(BatchNormalization())
+    
+    #model.add(Dense(16, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4), activation='relu'))
+    #model.add(BatchNormalization())
+    model.add(Dense(2, activation='softmax'))
+	# compile model
+    opt = Adam(learning_rate=0.0002) #.0005 for ex 1a 
+    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+#model and parameters
+
+
+model = define_model( video_y , video_x)
+model.summary()
+
+batch_size = 128
+num_epochs = 200 # number of epochs
+
+
+ex_3 - 1x - 20211008-021543
+----------------------------
+Test results:
+1/1 [==============================] - 0s 74ms/step - loss: 0.4714 - accuracy: 0.9000
+1/1 [==============================] - 0s 98ms/step
+Accuracy: 0.900000
+Precision: 1.000000
+Recall: 0.800000
+F1 score: 0.888889
+Confusion matrix:
+[[10  0]
+ [ 2  8]]
+
+Same as previous model
+
+
+ex_3 - 2x - 20211008-023806
+----------------------------
+Test results:
+1/1 [==============================] - 0s 72ms/step - loss: 0.4695 - accuracy: 0.9000
+1/1 [==============================] - 0s 76ms/step
+Accuracy: 0.900000
+Precision: 0.833333
+Recall: 1.000000
+F1 score: 0.909091
+Confusion matrix:
+[[ 8  2]
+ [ 0 10]]
+
+# define cnn model
+def define_model(video_y , video_x):
+    model = Sequential()
+ 
+    model.add(Conv2D(64, (5, 5), activation='relu',input_shape=(video_y , video_x, 3))) #64 (3,3) for exercise 1a
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((9, 9)))
+
+    '''
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+    '''
+
+    model.add(Flatten())
+    
+    model.add(Dropout(0.4)) #0.3 for 1a
+    
+    model.add(Dense(64, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu')) #64 for 1a
+    model.add(Dropout(0.2)) #0.3 for 1a
+    model.add(BatchNormalization())
+    
+    #model.add(Dense(16, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4), activation='relu'))
+    #model.add(BatchNormalization())
+    model.add(Dense(2, activation='softmax'))
+	# compile model
+    opt = Adam(learning_rate=0.0002) #.0005 for ex 1a 
+    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+#model and parameters
+
+
+model = define_model( video_y , video_x)
+model.summary()
+
+batch_size = 128
+num_epochs = 200 # number of epochs
+
+
+ex_1a - orig - 20211008-030547
+---------------------------------
+Test results:
+1/1 [==============================] - 0s 74ms/step - loss: 0.8949 - accuracy: 0.8000
+1/1 [==============================] - 0s 76ms/step
+Accuracy: 0.800000
+Precision: 1.000000
+Recall: 0.600000
+F1 score: 0.750000
+Confusion matrix:
+[[10  0]
+ [ 4  6]]
+
+# define cnn model
+def define_model(video_y , video_x):
+    model = Sequential()
+ 
+    model.add(Conv2D(64, (5, 5), activation='relu',input_shape=(video_y , video_x, 3))) #64 (3,3) for exercise 1a
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((9, 9)))
+
+    '''
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+    '''
+
+    model.add(Flatten())
+    
+    model.add(Dropout(0.4)) #0.3 for 1a
+    
+    model.add(Dense(16, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu')) #64 for 1a
+    model.add(Dropout(0.2)) #0.3 for 1a
+    model.add(BatchNormalization())
+    
+    #model.add(Dense(16, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4), activation='relu'))
+    #model.add(BatchNormalization())
+    model.add(Dense(2, activation='softmax'))
+	# compile model
+    opt = Adam(learning_rate=0.0005) #.0005 for ex 1a 
+    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+#model and parameters
+
+
+model = define_model( video_y , video_x)
+model.summary()
+
+batch_size = 128
+num_epochs = 150 # number of epochs
+
+
+ex_1a - 1x - 20211008-041106
+----------------------------
+Test results:
+1/1 [==============================] - 0s 62ms/step - loss: 1.2449 - accuracy: 0.8000
+1/1 [==============================] - 0s 90ms/step
+Accuracy: 0.800000
+Precision: 0.875000
+Recall: 0.700000
+F1 score: 0.777778
+Confusion matrix:
+[[9 1]
+ [3 7]]
+
+# define cnn model
+def define_model(video_y , video_x):
+    model = Sequential()
+ 
+    model.add(Conv2D(64, (3, 3), activation='relu',input_shape=(video_y , video_x, 3))) #64 (3,3) for exercise 1a
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((11, 11)))
+
+    '''
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+    '''
+
+    model.add(Flatten())
+    
+    model.add(Dropout(0.4)) #0.3 for 1a
+    
+    model.add(Dense(128, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu')) #64 for 1a
+    model.add(Dropout(0.3)) #0.3 for 1a
+    model.add(BatchNormalization())
+    
+    model.add(Dense(32, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dense(2, activation='softmax'))
+	# compile model
+    opt = Adam(learning_rate=0.0001) #.0005 for ex 1a 
+    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+#model and parameters
+
+
+model = define_model( video_y , video_x)
+model.summary()
+
+batch_size = 64
+num_epochs = 150 # number of epochs
+
+
+ex_1a - 2x - 20211008-035133
+-----------------------------
+Test results:
+1/1 [==============================] - 0s 61ms/step - loss: 0.6415 - accuracy: 0.8500
+1/1 [==============================] - 0s 89ms/step
+Accuracy: 0.850000
+Precision: 1.000000
+Recall: 0.700000
+F1 score: 0.823529
+Confusion matrix:
+[[10  0]
+ [ 3  7]]
+
+
+# define cnn model
+def define_model(video_y , video_x):
+    model = Sequential()
+ 
+    model.add(Conv2D(64, (3, 3), activation='relu',input_shape=(video_y , video_x, 3))) #64 (3,3) for exercise 1a
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((9, 9)))
+
+    '''
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+    '''
+
+    model.add(Flatten())
+    
+    model.add(Dropout(0.4)) #0.3 for 1a
+    
+    model.add(Dense(256, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu')) #64 for 1a
+    model.add(Dropout(0.3)) #0.3 for 1a
+    model.add(BatchNormalization())
+    
+    model.add(Dense(16, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dense(2, activation='softmax'))
+	# compile model
+    opt = Adam(learning_rate=0.0001) #.0005 for ex 1a 
+    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+#model and parameters
+
+
+model = define_model( video_y , video_x)
+model.summary()
+
+batch_size = 64
+num_epochs = 150 # number of epochs
+
+
+
+ex_1b - orig - 20211008-162913
+-----------------------------
+
+Test results:
+1/1 [==============================] - 0s 19ms/step - loss: 0.8603 - accuracy: 0.8000
+1/1 [==============================] - 0s 66ms/step
+Accuracy: 0.800000
+Precision: 0.875000
+Recall: 0.700000
+F1 score: 0.777778
+Confusion matrix:
+[[9 1]
+ [3 7]]
+
+# define cnn model
+def define_model(video_y , video_x):
+    model = Sequential()
+ 
+    model.add(Conv2D(32, (3, 3), activation='relu',input_shape=(video_y , video_x, 3))) #64 (3,3) for exercise 1a
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+
+    '''
+    model.add(Conv2D(16, (3, 3), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+
+    model.add(Conv2D(16, (3, 3), activation='relu'))
+    model.add(BatchNormalization())
+    #model.add(MaxPooling2D((3, 3)))
+    '''
+    
+    model.add(Flatten())
+    
+    model.add(Dropout(0.4)) 
+
+    model.add(Dense(32, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu'))
+    model.add(Dropout(0.2))
+    model.add(BatchNormalization())
+ 
+    model.add(Dense(16, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu'))
+    model.add(Dropout(0.2))
+    model.add(BatchNormalization())
+
+    
+    model.add(Dense(2, activation='softmax'))
+	# compile model
+    opt = Adam(learning_rate=0.0002)
+    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+#model and parameters
+
+
+model = define_model( video_y , video_x)
+model.summary()
+
+batch_size = 128
+num_epochs = 200 # number of epochs
+
+ex_1b - 1x - 20211008-211557
+-----------------------------
+
+Test results:
+1/1 [==============================] - 0s 82ms/step - loss: 1.4021 - accuracy: 0.8000
+1/1 [==============================] - 0s 77ms/step
+Accuracy: 0.800000
+Precision: 1.000000
+Recall: 0.600000
+F1 score: 0.750000
+Confusion matrix:
+[[10  0]
+ [ 4  6]]
+
+# define cnn model
+def define_model(video_y , video_x):
+    model = Sequential()
+ 
+    model.add(Conv2D(64, (7, 7), activation='relu',input_shape=(video_y , video_x, 3))) #64 (3,3) for exercise 1a
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((9, 9)))
+    
+    '''
+    model.add(Conv2D(16, (5, 5), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+    '''
+
+    model.add(Flatten())
+    
+    model.add(Dropout(0.4)) #0.3 for 1a
+    
+    model.add(Dense(128, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu')) #64 for 1a
+    model.add(Dropout(0.3)) #0.3 for 1a
+    model.add(BatchNormalization())
+    
+    #model.add(Dense(16, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4), activation='relu'))
+    #model.add(BatchNormalization())
+    model.add(Dense(2, activation='softmax'))
+	# compile model
+    opt = Adam(learning_rate=0.0002) #.0005 for ex 1a 
+    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+#model and parameters
+
+
+model = define_model( video_y , video_x)
+model.summary()
+
+batch_size = 64
+num_epochs = 200 # number of epochs
+
+
+ex_1b - 2x - 20211009-065554
+-----------------------------
+
+
+Test results:
+1/1 [==============================] - 0s 77ms/step - loss: 1.0903 - accuracy: 0.8500
+1/1 [==============================] - 0s 93ms/step
+Accuracy: 0.850000
+Precision: 1.000000
+Recall: 0.700000
+F1 score: 0.823529
+Confusion matrix:
+[[10  0]
+ [ 3  7]]
+
+# define cnn model
+def define_model(video_y , video_x):
+    model = Sequential()
+ 
+    model.add(Conv2D(64, (7, 7), activation='relu',input_shape=(video_y , video_x, 3))) #64 (3,3) for exercise 1a
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((9, 9)))
+    
+    '''
+    model.add(Conv2D(16, (5, 5), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D((5, 5)))
+    '''
+
+    model.add(Flatten())
+    
+    model.add(Dropout(0.5)) #0.3 for 1a
+    
+    model.add(Dense(64, kernel_regularizer=regularizers.l1_l2(l1=1e-4, l2=1e-3), activation='relu')) #64 for 1a
+    model.add(Dropout(0.3)) #0.3 for 1a
+    model.add(BatchNormalization())
+    
+    model.add(Dense(16, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dense(2, activation='softmax'))
+	# compile model
+    opt = Adam(learning_rate=0.0002) #.0005 for ex 1a 
+    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+#model and parameters
+
+
+model = define_model( video_y , video_x)
+model.summary()
+
+batch_size = 64
+num_epochs = 150 # number of epochs
