@@ -1,0 +1,3 @@
+cd C:\Thesis\excersie_module\openpose-1.7.0-binaries-win64-gpu\openpose\python\
+conda activate py37
+python working_code.py
