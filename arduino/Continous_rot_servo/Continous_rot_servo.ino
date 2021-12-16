@@ -15,11 +15,11 @@ void setup() {
 void loop() {
 
   myservo.write(40); //Motor rotate inside
-  delay(2000);
+  delay(1800);
   myservo.write(90);
-  delay(5000);
+  delay(2000);
   myservo.write(180); //Motor rotate outside
-  delay(4000);
+  delay(1500);
   myservo.write(90);
   delay(5000);
   
