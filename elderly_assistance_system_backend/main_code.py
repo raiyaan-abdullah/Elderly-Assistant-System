@@ -4,9 +4,9 @@ import requests
 from datetime import datetime
 import datetime as dt
 from dateutil.relativedelta import relativedelta
-from OCR_main import ocr
+from easy_ocr_test import easy_ocr
 import serial
-
+from django import db
 import sqlite3
 
 
@@ -20,7 +20,7 @@ def validity(Time):
     time_now=datetime.now().time()
     time_now = datetime.combine(dt.date.today(), time_now)
     timedelta_obj = relativedelta(time_now, Time)
-    if timedelta_obj.hours==0 and -45<=timedelta_obj.minutes<=45:
+    if timedelta_obj.hours==0 and -55<=timedelta_obj.minutes<=55:
         return 1
     else:
         return 0
@@ -59,7 +59,7 @@ def call_ocr_code():
             else:
                 #solenoid_activate(obj[1])
                 print("Time for ",obj[1]," ",obj[2])
-                ocr(obj[1],obj[0],obj[2])
+                easy_ocr(obj[1],obj[0],obj[2])
 
 
          
@@ -110,7 +110,7 @@ def create_data():
         
 #schedule.every(5).minutes.do(create_data)
 
-create_data()
+#create_data()
 
 def medicine_code():
     while 1:
