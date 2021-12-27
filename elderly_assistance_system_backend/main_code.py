@@ -110,7 +110,7 @@ def create_data():
         
 #schedule.every(5).minutes.do(create_data)
 
-#create_data()
+create_data()
 
 def medicine_code():
     while 1:
