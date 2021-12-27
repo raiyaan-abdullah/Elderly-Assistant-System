@@ -8,20 +8,28 @@ Servo myservo;  //Servo name is myservo
 
 void setup() {
   Serial.begin(9600);
-  myservo.attach(9);  // attaches the servo signal pin on pin D6
+  myservo.attach(3);  // attaches the servo signal pin on pin D6
 
 }
 
 void loop() {
 
   myservo.write(40); //Motor rotate inside
-  delay(1800);
+  delay(1300);
+  myservo.write(90); //Motor break
+  delay(5000);
+  myservo.write(180); //Motor rotate outside
+  delay(1300); 
+  myservo.write(90); //Motor breal
+  delay(5000); 
+  /*
   myservo.write(90);
   delay(2000);
-  myservo.write(180); //Motor rotate outside
+  myservo.write(280); //Motor rotate outside
   delay(1500);
-  myservo.write(90);
+  myservo.write(190);
   delay(5000);
+  */
   
       
 }
