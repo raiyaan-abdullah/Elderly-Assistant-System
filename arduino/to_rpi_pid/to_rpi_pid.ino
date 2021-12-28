@@ -23,35 +23,38 @@ void loop() {
     Serial.println(data);
 
     if (data=="fo") {
-      leftspeed, rightspeed = motorspeed;
+      leftspeed = motorspeed; 
+      rightspeed = motorspeed;
       motor(leftspeed,rightspeed);
-      delay(1000);
+      delay(500);
     } 
     
-      else if (data.substring(0,2)=="le") {
+    else if (data.substring(0,2)=="le") {
       data.replace("le,","");
       data2 = data.toInt();
       if (data2>0) {
         leftspeed = motorspeed - data2;
         rightspeed = motorspeed;        
       } else {
-        leftspeed, rightspeed = motorspeed;
+        leftspeed = motorspeed; 
+        rightspeed = motorspeed;
       }
 
       motor(leftspeed,rightspeed);
-      delay(1000);
+      delay(500);
     } 
-      else if (data.substring(0,2)=="ri") {
+    else if (data.substring(0,2)=="ri") {
       data.replace("ri,","");
       data2 = data.toInt();
       if (data2>0) {
         leftspeed = motorspeed;
         rightspeed = motorspeed - data2;        
       } else {
-        leftspeed, rightspeed = motorspeed;
+        leftspeed = motorspeed; 
+        rightspeed = motorspeed;
       }
       motor(leftspeed,rightspeed);
-      delay(1000);
+      delay(500);
     } 
     
      else if (data=="br") {

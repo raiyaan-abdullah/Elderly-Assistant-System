@@ -23,7 +23,8 @@ void loop() {
     Serial.println(data);
 
     if (data=="fo") {
-      leftspeed, rightspeed = motorspeed;
+      leftspeed = motorspeed; 
+      rightspeed = motorspeed;
       motor(leftspeed,rightspeed);
       delay(1000);
     } 
