@@ -15,7 +15,6 @@ Created on Fri Apr  3 23:13:17 2020
 
 import numpy as np
 import cv2
-import pytesseract
 from east_detector import text_boundary,imcrop  #this is for getting the text box in image which coded manually
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
