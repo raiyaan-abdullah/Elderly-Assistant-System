@@ -20,25 +20,35 @@ def validity(Time):
     time_now=datetime.now().time()
     time_now = datetime.combine(dt.date.today(), time_now)
     timedelta_obj = relativedelta(time_now, Time)
-    if timedelta_obj.hours==0 and -55<=timedelta_obj.minutes<=55:
+    if timedelta_obj.hours==0 and -45<=timedelta_obj.minutes<=45:
         return 1
     else:
         return 0
 
 #need to modify these code so that for every medicine name the serial write is that drawer number
-def solenoid_activate(medicine):
-    with serial.Serial('COM4', 9800, timeout=1) as ser:
+def drawer_activate(medicine):
+    with serial.Serial('COM8', 9800, timeout=1) as ser:
         time.sleep(2)
-        if medicine=='Provair':
-            ser.write(b'P')   # send the pyte string 'H'
-            time.sleep(2)   # wait 0.5 seconds
-        elif medicine=='E-CAP':
-            ser.write(b'E')   # send the pyte string 'H'
-            time.sleep(2)   # wait 0.5 seconds
-        elif medicine=='Fexo':
-            ser.write(b'F')   # send the pyte string 'H'
-            time.sleep(2)   # wait 0.5 seconds
-            
+        c.execute("SELECT * FROM medicine_medicine")  # got todays routine medicine list
+        medicine_objects = c.fetchall()
+        for obj in medicine_objects:
+            if obj[1] == medicine:
+                drawer=str(obj[4])
+                print("drawer no: ",drawer)
+                encoded_string = drawer.encode()
+                byte_array = bytearray(encoded_string)
+                ser.write(byte_array)
+                time.sleep(2)
+        # if medicine=='Provair':
+        #     ser.write(b'P')   # send the pyte string 'H'
+        #     time.sleep(2)   # wait 0.5 seconds
+        # elif medicine=='E-CAP':
+        #     ser.write(b'E')   # send the pyte string 'H'
+        #     time.sleep(2)   # wait 0.5 seconds
+        # elif medicine=='Fexo':
+        #     ser.write(b'F')   # send the pyte string 'H'
+        #     time.sleep(2)   # wait 0.5 seconds
+        #
 
 def call_ocr_code():
     c.execute("SELECT * FROM medicine_medicine") #got todays routine medicine list
@@ -55,9 +65,9 @@ def call_ocr_code():
                     
             if con_medicine[1]==1:
                 print("You have already taken your scheduled medicines.",obj[1])
-                return 0
+                #return 0
             else:
-                #solenoid_activate(obj[1])
+                drawer_activate(obj[1])
                 print("Time for ",obj[1]," ",obj[2])
                 easy_ocr(obj[1],obj[0],obj[2])
 
@@ -110,7 +120,7 @@ def create_data():
         
 #schedule.every(5).minutes.do(create_data)
 
-#create_data()
+create_data()
 
 def medicine_code():
     while 1:

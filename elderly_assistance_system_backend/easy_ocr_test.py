@@ -47,7 +47,7 @@ def validity(Time):
     time_now=dt.datetime.now().time()
     time_now = dt.datetime.combine(dt.date.today(), time_now)
     timedelta_obj = relativedelta(time_now, Time)
-    if timedelta_obj.hours==0 and -55<=timedelta_obj.minutes<=55:
+    if timedelta_obj.hours==0 and -45<=timedelta_obj.minutes<=45:
         return 1
     else:
         return 0
