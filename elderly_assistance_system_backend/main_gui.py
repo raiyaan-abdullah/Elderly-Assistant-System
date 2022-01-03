@@ -82,7 +82,9 @@ class secondPage(QMainWindow):
     def print_message(self,val):
         st=val
         self.status.setText("Status: \n"+ st.message)
-        self.drawer.setText("                                   Drawer No:"+st.drawer_no)
+        self.status.setAlignment(Qt.AlignCenter)
+        self.drawer.setText("Drawer No:"+st.drawer_no)
+        self.drawer.setAlignment(Qt.AlignCenter)
 
     
 

@@ -170,6 +170,7 @@ class main_code_thread(QThread):
                         print(medicine_name, " found")
                         self.message= medicine_name.capitalize()+" found"
                         self.status.emit(self)
+                        time.sleep(1)
                         finished = 1
                         Date = '"{}"'.format(dt.datetime.now().date())
                         print(Date)
@@ -185,6 +186,10 @@ class main_code_thread(QThread):
                         # finished = 1  # this variable is for terminating program after getting one correct strip in front of camera
 
                     # print(med)
+                    else:
+                        print("Incorrect.. Show ", medicine_name)
+                        self.message = "Incorrect.. Show "+medicine_name.capitalize()
+                        self.status.emit(self)
                 else:
                     print("Please show the medicine..")
                     self.message = "Please show the medicine.."
@@ -213,7 +218,7 @@ class main_code_thread(QThread):
 
             if finished == 1:
                 print("You have no more medicines. Thanks for taking your medicines")
-                self.message = "You have no more medicines. Thanks for taking your medicines"
+                self.message = "You have no more medicines.\n Thanks for taking your medicines"
                 self.status.emit(self)
                 break
             cv2.imshow('frame', frame)
@@ -242,7 +247,7 @@ class main_code_thread(QThread):
                 if con_medicine[1]==1:
                     print("You have already taken your scheduled medicines.",obj[1])
 
-                    self.message="You have already taken your scheduled medicines."
+                    self.message="You have already taken \nyour scheduled medicines."
                     self.status.emit(self)
                 else:
                     #drawer_activate(obj[1])

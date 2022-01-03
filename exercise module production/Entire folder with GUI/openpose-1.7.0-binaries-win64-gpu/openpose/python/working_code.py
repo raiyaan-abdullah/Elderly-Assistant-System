@@ -613,6 +613,8 @@ class Result_page(QMainWindow):
                 self.step.setText("Please try again.. Score is low..")
                 movie1 = QtGui.QMovie('incorrect.png')
                 self.gif.setMovie(movie1)
+                self.inst.setText(
+                    "Instructions: \n1. While circumventing the hand it should stay orthogonal to the ground as much as possible.\n2. Do not extend the hand too much sideways.\n3. Try to move the hand at such a speed so that the step finishes in 6 seconds.")
                 movie1.start()
                 sp = SpeakingThread()
 
@@ -645,7 +647,7 @@ class Result_page(QMainWindow):
 
                 # self.speak()
                 sp.start()
-                sp.speak("Very Good !!!  One of the parts was good")
+                sp.speak("Good !!!  One of the parts was good")
                 sp.terminate()
             else:
                 self.title.setText("           Sorry !!! ")
@@ -653,6 +655,8 @@ class Result_page(QMainWindow):
                 movie1 = QtGui.QMovie('incorrect.png')
                 self.gif.setMovie(movie1)
                 movie1.start()
+                #self.inst.setText("Instructions: \n1. Keep your hand straight while extending to the front. Do not move it in sideways direction.\nWhile in the middle of the step, the hand needs to be parallel to the ground.\n2. At the start and the end of the step, the hand must be orthogonal to the ground as much as possible.\n3. Try to move the hand at such a speed so that the step finishes in 6 seconds.")
+
                 sp = SpeakingThread()
 
                 # self.speak()

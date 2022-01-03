@@ -69,6 +69,7 @@ try:
     counter = 0
     while 1:
         num_maps = heatmaps.shape[0]
+        print(counter)
         heatmap = heatmaps[counter, :, :].copy()
         heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
         combined = cv2.addWeighted(outputImageF, 0.5, heatmap, 0.5, 0)
