@@ -16,6 +16,7 @@ from detect_quality import detect_Thread
 
 from movenet_code_video_gui import movenet_Thread
 from generate_image_graph_advanced_gui import graph_Thread
+from speaking_thread import SpeakingThread
 
 class mainpage(QMainWindow):
     def __init__(self):
@@ -597,16 +598,28 @@ class Result_page(QMainWindow):
                 bad +=1
         if int(count) ==0:
             if good==1:
-                self.title.setText("           Congratualtions !!! ")
+                self.title.setText("           Congratulations !!! ")
                 self.step.setText("You have done perfectly! Your Score is " + str(round(good_score[0] * 100, 2)) + " %")
                 movie1 = QtGui.QMovie('correct.png')
                 self.gif.setMovie(movie1)
+                sp = SpeakingThread()
+
+                # self.speak()
+                sp.start()
+                sp.speak("Congratulations !!! You have done perfectly!")
+                sp.terminate()
             else:
                 self.title.setText("           Sorry !!! ")
                 self.step.setText("Please try again.. Score is low..")
                 movie1 = QtGui.QMovie('incorrect.png')
                 self.gif.setMovie(movie1)
                 movie1.start()
+                sp = SpeakingThread()
+
+                # self.speak()
+                sp.start()
+                sp.speak("Sorry !!!  Please try again.. Score is low..")
+                sp.terminate()
         else:
 
             if good==2:
@@ -616,18 +629,36 @@ class Result_page(QMainWindow):
                 movie1 = QtGui.QMovie('correct.png')
                 self.gif.setMovie(movie1)
                 movie1.start()
+                sp = SpeakingThread()
+
+                # self.speak()
+                sp.start()
+                sp.speak("Congratulations !!! You have done perfectly!")
+                sp.terminate()
             elif good == 1:
                 self.title.setText("           Well Done !!! ")
                 self.step.setText("You have done well in one part, other one was not good")
                 movie1 = QtGui.QMovie('correct.png')
                 self.gif.setMovie(movie1)
                 movie1.start()
+                sp = SpeakingThread()
+
+                # self.speak()
+                sp.start()
+                sp.speak("Very Good !!!  One of the parts was good")
+                sp.terminate()
             else:
                 self.title.setText("           Sorry !!! ")
                 self.step.setText("Please try again.. Score is low..")
                 movie1 = QtGui.QMovie('incorrect.png')
                 self.gif.setMovie(movie1)
                 movie1.start()
+                sp = SpeakingThread()
+
+                # self.speak()
+                sp.start()
+                sp.speak("Sorry !!!  Please try again.. Score is low..")
+                sp.terminate()
         print(self.score)
 
     def okay(self):

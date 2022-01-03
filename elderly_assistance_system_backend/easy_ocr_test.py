@@ -25,22 +25,6 @@ c=conn.cursor()
 alpha = 1 # Contrast control (1.3.0)
 beta = 0 # Brightness control (0-100)
 
-'''def missing_medicine_counter(missing_object):
-    Time=dt.datetime.combine(dt.date.today(), missing_object.time)
-    time_now=dt.datetime.now().time()
-    time_now = dt.datetime.combine(dt.date.today(), time_now)
-    timedelta_obj = relativedelta(time_now, Time)
-    if 0<=timedelta_obj.hours<23 and timedelta_obj.minutes>0:
-        try:
-            con_medicine=MedicineHistory.objects.get(name=missing_object.name,time=missing_object.time,date=dt.datetime.now().date())
-        except:
-
-            trig_medicine=MedicineHistory(name=missing_object.name,date=dt.datetime.now().date(),time=missing_object.time,consumed=False,time_of_consumption=dt.datetime.now().time())
-            print("You misses ",trig_medicine.name)
-            trig_medicine.save()
-    else:
-        return 0'''
-
 #cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
 #check a medicine is valid or not comparing with medication time and current time
 def validity(Time):

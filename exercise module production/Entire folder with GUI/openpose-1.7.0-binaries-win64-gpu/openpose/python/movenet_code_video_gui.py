@@ -28,7 +28,7 @@ from IPython.display import HTML, display
 from PyQt5.QtCore import QThread
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtCore import QObject
-
+from speaking_thread import SpeakingThread
 #@title Helper functions for visualization
 
 # Dictionary that maps from joint names to keypoint indices.
@@ -249,6 +249,14 @@ class movenet_Thread(QThread):
 
         # Create a VideoCapture object
         self.cap = cv2.VideoCapture(0)
+        sp = SpeakingThread()
+
+        # self.speak()
+        sp.start()
+        sp.speak("We are recording your excersice")
+        sp.speak("Start performing when the window opens")
+        #sp.speak("")
+        sp.quit()
         self.cap.set(3, 1280)
         self.cap.set(4, 720)
 
@@ -419,10 +427,22 @@ class movenet_Thread(QThread):
 
             cap=cv2.VideoCapture(0)
             time.sleep(0.5)
+            sp= SpeakingThread()
+
+            #self.speak()
+            sp.start()
+            sp.speak( "Please stand on proper place.")
+            sp.speak("Keep your both hand down")
+            sp.quit()
             current_time=0
             prev_time=time.time()
             frame_counter=0
             ready_counter = 0
+            sp = SpeakingThread()
+
+            # self.speak()
+            sp.start()
+
 
             while cap.isOpened():
                 okay,frame= cap.read()
@@ -432,6 +452,7 @@ class movenet_Thread(QThread):
                     frame_counter = 0 #Or whatever as long as it is the same as next line
                     #cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                     break
+                #cv2.imshow("Start Stream",frame)
                 # Our operations on the frame come here
                 '''image_path = 'input_image.jpeg'
                 image = tf.io.read_file(image_path)'''
@@ -459,12 +480,20 @@ class movenet_Thread(QThread):
 
                 if abs(wrist_level_diff) <0.03 and abs(left_side_diff)<0.1 and  abs(right_side_diff)<0.1:
                     ready_counter = ready_counter + 1
+
+                    if ready_counter==2:
+                        sp.speak("Good. We are detecting your initial pose..")
+
+                    #self.speak("Good. We are detecting your initial pose..")
                     print("Exercise ready")
                     print("left_wrist: ", keypoints_reduced[9])
                     print("right_wrist: ", keypoints_reduced[10])
                     print("left_shoulder: ", keypoints_reduced[5])
                     print("right_shoulder: ", keypoints_reduced[6])
                 else:
+                    sp.speak("You are not in correct pose.")
+                    sp.speak("Keep your both hand down.")
+                    #self.speak("You are not in correct pose.")
                     ready_counter = 0
                     print("------------------------")
                     print("Left wrist: ",left_wrist)
@@ -476,17 +505,25 @@ class movenet_Thread(QThread):
                     print("Right difference is: ",abs(right_side_diff))
 
                 if ready_counter>5:
-                    self.speak("Are you ready?")
-                    user_reply = self.takecommand()
-                    print(user_reply)
+                    sp.speak("All good.. Perform the excersice..")
+                    sp.quit()
+                    #user_reply = self.takecommand()
+                    #print(user_reply)
                     '''while "yes" not in user_reply:
                         self.speak("Please say yes when you are ready")
                         user_reply = self.takecommand()'''
 
                     cap.release()
                     cv2.destroyAllWindows()
+
                     self.record_video()
         if self.count==1:
+            sp = SpeakingThread()
+
+            # self.speak()
+            sp.start()
+            sp.speak("Please do the second part")
+            sp.quit()
             self.record_video()
 
 
