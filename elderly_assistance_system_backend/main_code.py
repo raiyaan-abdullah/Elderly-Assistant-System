@@ -53,8 +53,12 @@ class main_code_thread(QThread):
     def drawer_activate(self,medicine):
         with serial.Serial('COM8', 9800, timeout=1) as ser:
             time.sleep(2)
-            self.c.execute("SELECT * FROM medicine_medicine")  # got todays routine medicine list
-            medicine_objects = self.c.fetchall()
+
+            conn = sqlite3.connect('db.sqlite3')
+
+            c = conn.cursor()
+            c.execute("SELECT * FROM medicine_medicine")  # got todays routine medicine list
+            medicine_objects = c.fetchall()
             for obj in medicine_objects:
                 if obj[1] == medicine:
                     drawer=str(obj[4])
@@ -250,7 +254,7 @@ class main_code_thread(QThread):
                     self.message="You have already taken \nyour scheduled medicines."
                     self.status.emit(self)
                 else:
-                    #drawer_activate(obj[1])
+                    self.drawer_activate(obj[1])
                     print("Time for ",obj[1]," ",obj[2])
                     t = datetime.strptime(obj[2], '%H:%M:%S')
                     t=t.strftime("%I:%M %p")
