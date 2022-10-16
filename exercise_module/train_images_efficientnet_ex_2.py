@@ -61,8 +61,8 @@ from tensorflow.keras import applications
 
 #taking train data
 
-train_good_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/train/good'
-train_bad_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/train/bad'
+train_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/train/good'
+train_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/train/bad'
 
 total_videos = len(os.listdir(train_good_location)) + len(os.listdir(train_bad_location))
 
@@ -108,8 +108,8 @@ for file in os.listdir(train_bad_location):
 
 #taking val data
 
-val_good_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/val/good'
-val_bad_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/val/bad'
+val_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/val/good'
+val_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/val/bad'
 
 total_videos = len(os.listdir(val_good_location)) + len(os.listdir(val_bad_location))
 
@@ -154,8 +154,8 @@ for file in os.listdir(val_bad_location):
 
 #taking test data
 
-test_good_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/test/good'
-test_bad_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/test/bad'
+test_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/test/good'
+test_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/test/bad'
 
 total_videos = len(os.listdir(test_good_location)) + len(os.listdir(test_bad_location))
 
@@ -214,7 +214,7 @@ test_X = applications.efficientnet.preprocess_input(test_X)
 log_dir="logs\\fit\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
 tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
-filepath="D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/trained_models/ex_2/5x/exercise_predict_2_5x_efficientnet.{epoch:02d}-{val_loss:.2f}.hdf5"
+filepath="D:/Github Projects/Elderly-Assistant-System/exercise_module/trained_models/ex_2/5x/exercise_predict_2_5x_efficientnet.{epoch:02d}-{val_loss:.2f}.hdf5"
 checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss',save_best_only=True, verbose=1)
 
 
@@ -273,7 +273,7 @@ model.summary()
 
 
 batch_size = 64
-num_epochs = 50 # number of epochs
+num_epochs = 30 # number of epochs
 
 #callbacks=[EarlyStopping(patience=4, monitor='val_loss'),
 

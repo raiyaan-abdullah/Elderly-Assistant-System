@@ -245,11 +245,11 @@ for f in files:
 files = glob.glob('live_record/*')
 for f in files:
     os.remove(f)  
-                     
+'''                      
 generate_frame_plot('Openpose variations/openpose-1.7.0-binaries-win64-gpu/openpose/python/output_json_folder/arm_movement_good/','good/')
 generate_frame_plot('Openpose variations/openpose-1.7.0-binaries-win64-gpu/openpose/python/output_json_folder/arm_movement_bad/','bad/')
 
 '''
 generate_frame_plot('Openpose variations/openpose-1.7.0-binaries-win64-gpu/openpose/python/movenet/live_json/',
 'live_record/')
- '''  
+ 

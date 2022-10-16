@@ -48,7 +48,7 @@ video_y = 224
 
 #import Keras library
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Activation, Dropout, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, Activation, Dropout, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, GlobalAveragePooling2D,Conv1D,MaxPooling1D,GlobalAveragePooling1D
 from tensorflow.keras.layers import LSTM, GRU, SimpleRNN, Input, Bidirectional, TimeDistributed, BatchNormalization
 from tensorflow.keras.layers import RandomFlip, RandomRotation, RandomZoom, RandomTranslation, RandomHeight
 from tensorflow.keras.optimizers import Adam, SGD
@@ -61,8 +61,8 @@ from tensorflow.keras import applications
 
 #taking train data
 
-train_good_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/train/good'
-train_bad_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/train/bad'
+train_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/train/good'
+train_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/train/bad'
 
 total_videos = len(os.listdir(train_good_location)) + len(os.listdir(train_bad_location))
 
@@ -108,8 +108,8 @@ for file in os.listdir(train_bad_location):
 
 #taking val data
 
-val_good_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/val/good'
-val_bad_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/val/bad'
+val_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/val/good'
+val_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/val/bad'
 
 total_videos = len(os.listdir(val_good_location)) + len(os.listdir(val_bad_location))
 
@@ -154,8 +154,8 @@ for file in os.listdir(val_bad_location):
 
 #taking test data
 
-test_good_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/test/good'
-test_bad_location = 'D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/test/bad'
+test_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/test/good'
+test_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/test/bad'
 
 total_videos = len(os.listdir(test_good_location)) + len(os.listdir(test_bad_location))
 
@@ -214,8 +214,8 @@ test_X = applications.resnet.preprocess_input(test_X)
 log_dir="logs\\fit\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
 tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
-filepath="D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/exercise_module/image_plot/trained_models/ex_1b/7x/exercise_predict_1b_7x_resnet.{epoch:02d}-{val_loss:.2f}.hdf5"
-checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath, save_best_only=True, verbose=1)
+filepath="D:/Github Projects/Elderly-Assistant-System/exercise_module//trained_models/ex_1b/5x/exercise_predict_1b_5x_resnet.{epoch:02d}-{val_loss:.2f}.hdf5"
+checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss',save_best_only=True, verbose=1)
 
 
 print("Training on ",len(train_X)," Video data")
@@ -241,9 +241,9 @@ def define_model():
     #x = BatchNormalization()(x)
     x = Dropout(0.3)(x)
     x = GlobalAveragePooling2D()(x)
-    x = Dense(256, activation='relu')(x)
+    x = Dense(32, activation='relu')(x)
     #x = BatchNormalization()(x)
-    x = Dropout(0.3)(x)
+    x = Dropout(0.2)(x)
     x = Dense(32, activation='relu')(x)
     #x = BatchNormalization()(x)
     predictions = Dense(2, activation='softmax')(x)
@@ -256,7 +256,7 @@ def define_model():
     for layer in base_model.layers:
         layer.trainable = False
         
-    opt = Adam(learning_rate=0.0008) #.0005 for ex 1a 
+    opt = Adam(learning_rate=0.0002) #.0005 for ex 1a 
     model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     return model
 
@@ -266,8 +266,8 @@ model = define_model()
 model.summary()
 
 
-batch_size = 64
-num_epochs = 30 # number of epochs
+batch_size = 32
+num_epochs = 25 # number of epochs
 
 #callbacks=[EarlyStopping(patience=4, monitor='val_loss'),
 
@@ -285,7 +285,7 @@ history = model.fit(train_X, train_Y,
                  )
 
 #save the model
-model.save("exercise_quality_1b_7x_resnet.hdf5")
+model.save("exercise_quality_1b_5x_resnet.hdf5")
 
 #evaluation
 print("Test results:")

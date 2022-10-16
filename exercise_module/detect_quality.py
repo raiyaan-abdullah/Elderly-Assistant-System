@@ -15,9 +15,9 @@ import numpy as np
 video_x = 224
 video_y = 224
 
-file = cv2.imread("D:\Github Projects\Elderly-Assistance-System\elderly_assistance_system\exercise_module\image_plot\live_record\\1.jpg")
+file = cv2.imread("D:\Github Projects\Elderly-Assistant-System\exercise_module\\live_record\\1.jpg")
 
 img = cv2.resize(file, (video_x,video_y))
 img = np.reshape(img, (1,video_x,video_y,3))
-model = load_model("exercise_quality_2_9x_efficientnet.hdf5")
+model = load_model("exercise_quality_1b_5x_efficientnet.hdf5")
 print(model.predict(img))

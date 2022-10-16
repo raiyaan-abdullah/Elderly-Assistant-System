@@ -24,9 +24,11 @@ export class Medicine extends Component {
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Time</th>
+                                <th>Prescribed Time</th>
                                 <th>Started</th>
                                 <th>Drawer no.</th>
+                                <th>Required Dosage</th>
+                                <th>Current amount</th>
                                 <th/>
                             </tr>
                         </thead>
@@ -38,6 +40,8 @@ export class Medicine extends Component {
                                     <td>{medicine.time}</td>
                                     <td>{medicine.started}</td>
                                     <td>{medicine.drawer}</td>
+                                    <td></td>
+                                    <td></td>
                                     <td><button onClick={this.props.deleteMedicine.bind(this, medicine.id)} className="btn red-background white">Delete</button></td>
                                 </tr>
                             ))}

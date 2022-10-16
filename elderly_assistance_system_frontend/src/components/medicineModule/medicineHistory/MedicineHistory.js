@@ -66,7 +66,7 @@ export class MedicineHistory extends Component {
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Time</th>
+                            <th>Prescribed Time</th>
                             <th>Date</th>
 
                             <th>Consumed</th>

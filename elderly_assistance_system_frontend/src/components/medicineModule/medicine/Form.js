@@ -41,7 +41,7 @@ export class Form extends Component {
                     <input className="form-control" type="text" name="name" onChange={this.onChange} value={name}/>
                 </div>
                 <div className="form-group">
-                    <label>Time</label>
+                    <label>Prescribed Time</label>
                     <input className="form-control" type="time" name="time" onChange={this.onChange} value={time}/>
                 </div>
                 <div className="form-group">
@@ -51,6 +51,14 @@ export class Form extends Component {
                 <div className="form-group">
                     <label>Drawer no.</label>
                     <input className="form-control" type="number" name="drawer" onChange={this.onChange} value={drawer}/>
+                </div>
+                <div className="form-group">
+                    <label>Required dosage</label>
+                    <input className="form-control" type="number" />
+                </div>
+                <div className="form-group">
+                    <label>Current amount</label>
+                    <input className="form-control" type="number" />
                 </div>
                 <div className="form-group">
                     <button type="submit" className="btn green-background white">Add</button>

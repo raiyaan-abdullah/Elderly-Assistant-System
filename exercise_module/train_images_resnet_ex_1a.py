@@ -48,7 +48,7 @@ video_y = 224
 
 #import Keras library
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense, Activation, Dropout, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, Activation, Dropout, Conv2D, MaxPooling2D, Flatten, GlobalMaxPooling2D, GlobalAveragePooling2D,Conv1D,MaxPooling1D,GlobalAveragePooling1D
 from tensorflow.keras.layers import LSTM, GRU, SimpleRNN, Input, Bidirectional, TimeDistributed, BatchNormalization
 from tensorflow.keras.layers import RandomFlip, RandomRotation, RandomZoom, RandomTranslation, RandomHeight
 from tensorflow.keras.optimizers import Adam, SGD
@@ -61,8 +61,8 @@ from tensorflow.keras import applications
 
 #taking train data
 
-train_good_location = 'D:/Github Projects/Elderly-Assistance-System/exercise_module/train/good'
-train_bad_location = 'D:/Github Projects/Elderly-Assistance-System/exercise_module/train/bad'
+train_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1a normal + flipped augmented 7x/train/good'
+train_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1a normal + flipped augmented 7x/train/bad'
 
 total_videos = len(os.listdir(train_good_location)) + len(os.listdir(train_bad_location))
 
@@ -108,8 +108,8 @@ for file in os.listdir(train_bad_location):
 
 #taking val data
 
-val_good_location = 'D:/Github Projects/Elderly-Assistance-System/exercise_module/val/good'
-val_bad_location = 'D:/Github Projects/Elderly-Assistance-System/exercise_module/val/bad'
+val_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1a normal + flipped augmented 7x/val/good'
+val_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1a normal + flipped augmented 7x/val/bad'
 
 total_videos = len(os.listdir(val_good_location)) + len(os.listdir(val_bad_location))
 
@@ -154,8 +154,8 @@ for file in os.listdir(val_bad_location):
 
 #taking test data
 
-test_good_location = 'D:/Github Projects/Elderly-Assistance-System/exercise_module/test/good'
-test_bad_location = 'D:/Github Projects/Elderly-Assistance-System/exercise_module/test/bad'
+test_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1a normal + flipped augmented 7x/test/good'
+test_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1a normal + flipped augmented 7x/test/bad'
 
 total_videos = len(os.listdir(test_good_location)) + len(os.listdir(test_bad_location))
 
@@ -214,8 +214,8 @@ test_X = applications.resnet.preprocess_input(test_X)
 log_dir="logs\\fit\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
 tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
-filepath="D:/Github Projects/Elderly-Assistance-System/exercise_module/trained_models/ex_1a/7x/exercise_predict_1a_7x_resnet.{epoch:02d}-{val_loss:.2f}.hdf5"
-checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath, save_best_only=True, verbose=1)
+filepath="D:/Github Projects/Elderly-Assistant-System/exercise_module/trained_models/ex_1a/7x/exercise_predict_1a_7x_resnet.{epoch:02d}-{val_loss:.2f}.hdf5"
+checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss',save_best_only=True, verbose=1)
 
 
 print("Training on ",len(train_X)," Video data")
@@ -237,18 +237,28 @@ def define_model():
 
     inputs = Input(shape=(224, 224, 3))
     x = data_augmentation(inputs)
-    x = base_model(x)
-    x = Dropout(0.4)(x)
+    x = base_model(inputs)
+    #x = BatchNormalization()(x)
+    x = Dropout(0.4 )(x)
     x = GlobalAveragePooling2D()(x)
-    x = Dense(256, activation='relu')(x)
-    x = Dropout(0.2)(x)
+    #x = GlobalAveragePooling1D()(x)
+    x = Dense(128, activation='relu')(x)
+    #x = Dropout(0.3)(x)
+    x = Dense(128, activation='relu')(x)
+    #x = Dropout(0.4)(x)
     x = Dense(64, activation='relu')(x)
+    #x = Dropout(0.3)(x)
+    #x = Dropout(0.3)(x)
+    #x = BatchNormalization()(x)
+    '''x = Dropout(0.6)(x)
+    x = Dense(32, activation='relu')(x)
+    #x = BatchNormalization()(x)'''
     predictions = Dense(2, activation='softmax')(x)
     model = Model(inputs=inputs, outputs=predictions)
 
     print("Number of layers in the base model: ", len(base_model.layers))
 
-    #fine_tune_at = 130
+    #fine_tune_at = 165
     #for layer in base_model.layers[:fine_tune_at]:
     for layer in base_model.layers:
         layer.trainable = False
@@ -264,7 +274,7 @@ model.summary()
 
 
 batch_size = 64
-num_epochs = 30 # number of epochs
+num_epochs = 50 # number of epochs
 
 #callbacks=[EarlyStopping(patience=4, monitor='val_loss'),
 

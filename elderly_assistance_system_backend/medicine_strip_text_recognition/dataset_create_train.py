@@ -21,7 +21,7 @@ if gpus:
 
 import os
 #WARNING: this chdir line is dangerous, need to rethink approach
-os.chdir('D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/elderly_assistance_system_backend/medicine_strip_text_recognition')
+#os.chdir('D:/Github Projects/Elderly-Assistance-System/elderly_assistance_system/elderly_assistance_system_backend/medicine_strip_text_recognition')
 
 from word_generate import train_data_generate 
 import pandas as pd
@@ -34,7 +34,7 @@ import datetime
 #import Keras library
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Activation, Dropout
-from tensorflow.keras.layers import LSTM, Input, Bidirectional
+from tensorflow.keras.layers import LSTM, Input, Bidirectional, BatchNormalization
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from tensorflow.keras.metrics import categorical_accuracy
@@ -55,7 +55,7 @@ char_list_size = len(char_list)
 word_length = 80
 
 medicine_list=[]
-companies=["medicine_list.csv"]
+companies=["50_med_list.csv"]
 for company in companies:
     with open(company) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
@@ -96,12 +96,15 @@ print("Training on ",len(X)," Medicine")
 def bidirectional_lstm_model( word_length , char_list_size):
     print('Build LSTM model.')
     model = Sequential()
-    model.add(Bidirectional(LSTM(rnn_size, activation="relu"),input_shape=(word_length, char_list_size)))
-    model.add(Dropout(0.6))
+    model.add(BatchNormalization(input_shape=(word_length, char_list_size)))
+    model.add(Bidirectional(LSTM(rnn_size, activation="relu")))
+    #model.add(Dropout(0.6))
+    model.add(BatchNormalization())
     model.add(Dense(med_list_size))
+    
     model.add(Activation('softmax'))
     
-    optimizer = Adam(lr=learning_rate)
+    optimizer = Adam(lr=learning_rate, amsgrad=True)
     #callbacks=[EarlyStopping(patience=2, monitor='val_loss')]
     model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=[categorical_accuracy])
     print("model built!")
@@ -109,20 +112,21 @@ def bidirectional_lstm_model( word_length , char_list_size):
 
 #model and parameters
 rnn_size = 256 # size of RNN
-learning_rate = 0.001 #learning rate
+learning_rate = 0.0003 #learning rate
 
 model = bidirectional_lstm_model( word_length , char_list_size)
 model.summary()
 
-batch_size = 32 # minibatch size
-num_epochs = 20 # number of epochs
+batch_size = 16 # minibatch size
+num_epochs = 10 # number of epochs
 import shutil
 #callbacks=[EarlyStopping(patience=4, monitor='val_loss'),
 delete_path="shortlist_checkpoints"
-file_path="shortlist_checkpoints/medicine_name_predict.{epoch:02d}-{val_loss:.2f}.hdf5"
+file_path="shortlist_checkpoints/medicine_name_predict_50.{epoch:02d}-{val_loss:.2f}.hdf5"
 #shutil.rmtree(delete_path)
 callbacks=[ModelCheckpoint(filepath=file_path, monitor='val_loss', verbose=1, mode='auto', period=2),tensorboard_callback]
 #fit the model
+
 history = model.fit(X, Y,
                  batch_size=batch_size,
                  shuffle=True,
@@ -131,7 +135,7 @@ history = model.fit(X, Y,
                  validation_split=0.1)
 
 #save the model
-model.save("medicine_name_predict.h5")
+model.save("medicine_name_predict_50.h5")
 
 import matplotlib.pyplot as plt
 import numpy as np
