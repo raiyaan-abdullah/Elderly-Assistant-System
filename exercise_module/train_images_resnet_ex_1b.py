@@ -56,60 +56,21 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoa
 from tensorflow.keras.metrics import categorical_accuracy, binary_accuracy
 from tensorflow.keras import regularizers
 from tensorflow.keras import applications
+from tensorflow.keras.preprocessing import image_dataset_from_directory
 
 
-
-#taking train data
-
-train_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/train/good'
-train_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/train/bad'
-
-total_videos = len(os.listdir(train_good_location)) + len(os.listdir(train_bad_location))
-
-train_X=np.zeros((total_videos , video_y, video_x, 3))   
-train_Y=np.zeros((total_videos, 1))  
-
-
-read_counter = 0
-
-#need to make two identical for-loops into one later
-
-#putting correct exercise data into array
-
-for file in os.listdir(train_good_location):
-    file = cv2.imread(os.path.join(train_good_location, file))
-    img = cv2.resize(file, (video_x,video_y))
-    '''
-    cv2.imshow("view",img)
-    cv2.waitKey(0) # waits until a key is pressed
-    cv2.destroyAllWindows() # destroys
-    '''
-
-    train_X[read_counter,:,:,:] = img[:,:,:]
-    train_Y[read_counter] = 0
-    read_counter = read_counter+1
-
-
-#putting incorrect exercise data into array
-
-for file in os.listdir(train_bad_location):
-    file = cv2.imread(os.path.join(train_bad_location, file))
-    img = cv2.resize(file, (video_x,video_y))
-    '''
-    cv2.imshow("view",img)
-    cv2.waitKey(0) # waits until a key is pressed
-    cv2.destroyAllWindows() # destroys
-    '''
-    train_X[read_counter,:,:,:] = img[:,:,:]
-    train_Y[read_counter] = 1
-    read_counter = read_counter+1
-
+train_ds = image_dataset_from_directory(
+    directory='D:/Github Projects/Elderly-Assistant-System/exercise_module/data/arm_abduction_and_adduction_5x/train/',
+    labels='inferred',
+    label_mode='int',
+    batch_size=64,
+    image_size=(video_x, video_y))
 
 
 #taking val data
 
-val_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/val/good'
-val_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/val/bad'
+val_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/arm_abduction_and_adduction_5x/val/correct'
+val_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/arm_abduction_and_adduction_5x/val/incorrect'
 
 total_videos = len(os.listdir(val_good_location)) + len(os.listdir(val_bad_location))
 
@@ -154,8 +115,8 @@ for file in os.listdir(val_bad_location):
 
 #taking test data
 
-test_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/test/good'
-test_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/Arm Movement 1b normal + flipped augmented 5x/test/bad'
+test_good_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/arm_abduction_and_adduction_5x/test/correct'
+test_bad_location = 'D:/Github Projects/Elderly-Assistant-System/exercise_module/data/arm_abduction_and_adduction_5x/test/incorrect'
 
 total_videos = len(os.listdir(test_good_location)) + len(os.listdir(test_bad_location))
 
@@ -201,12 +162,16 @@ for file in os.listdir(test_bad_location):
 #need to fix train, val and test data reading to one loop
 
 #training        
-train_X, train_Y = shuffle(train_X, train_Y)
+#train_X, train_Y = shuffle(train_X, train_Y)
 
 
-train_X = applications.resnet.preprocess_input(train_X)
-val_X = applications.resnet.preprocess_input(val_X)
-test_X = applications.resnet.preprocess_input(test_X)
+#need to fix train, val and test data reading to one loop
+def preprocess(images, labels):
+    return tf.keras.applications.resnet_v2.preprocess_input(images), labels
+train_ds = train_ds.map(preprocess)
+
+val_X = applications.resnet_v2.preprocess_input(val_X)
+test_X = applications.resnet_v2.preprocess_input(test_X)
 
 
 #to view tensorboard data run in the folder : tensorboard --logdir logs/fit
@@ -214,11 +179,11 @@ test_X = applications.resnet.preprocess_input(test_X)
 log_dir="logs\\fit\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
 tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
-filepath="D:/Github Projects/Elderly-Assistant-System/exercise_module//trained_models/ex_1b/5x/exercise_predict_1b_5x_resnet.{epoch:02d}-{val_loss:.2f}.hdf5"
+filepath="D:/Github Projects/Elderly-Assistant-System/exercise_module/trained_models/arm_abduction_and_adduction/5x/exercise_predict_1b_5x_resnet.{epoch:02d}-{val_loss:.2f}.hdf5"
 checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss',save_best_only=True, verbose=1)
 
 
-print("Training on ",len(train_X)," Video data")
+#print("Training on ",len(train_X)," Video data")
 
 
 
@@ -233,15 +198,15 @@ def define_model():
     ]
     )
     
-    base_model = applications.ResNet50(weights='imagenet', include_top=False)
+    base_model = applications.ResNet50V2(weights='imagenet', include_top=False)
 
     inputs = Input(shape=(224, 224, 3))
-    x = data_augmentation(inputs)
+    #x = data_augmentation(inputs)
     x = base_model(inputs)
     #x = BatchNormalization()(x)
     x = Dropout(0.3)(x)
     x = GlobalAveragePooling2D()(x)
-    x = Dense(32, activation='relu')(x)
+    x = Dense(128, activation='relu')(x)
     #x = BatchNormalization()(x)
     x = Dropout(0.2)(x)
     x = Dense(32, activation='relu')(x)
@@ -256,7 +221,7 @@ def define_model():
     for layer in base_model.layers:
         layer.trainable = False
         
-    opt = Adam(learning_rate=0.0002) #.0005 for ex 1a 
+    opt = Adam(learning_rate=0.00005) #.0005 for ex 1b 
     model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     return model
 
@@ -266,8 +231,8 @@ model = define_model()
 model.summary()
 
 
-batch_size = 32
-num_epochs = 25 # number of epochs
+batch_size = 64
+num_epochs = 60 # number of epochs
 
 #callbacks=[EarlyStopping(patience=4, monitor='val_loss'),
 
@@ -276,7 +241,7 @@ num_epochs = 25 # number of epochs
 #callbacks=[ModelCheckpoint(filepath=file_path, monitor='val_loss', verbose=1, mode='auto', period=2),tensorboard_callback]
 callbacks=[tensorboard_callback,checkpoint]
 #fit the model
-history = model.fit(train_X, train_Y,
+history = model.fit(train_ds,
                  batch_size=batch_size,
                  shuffle=True,
                  epochs=num_epochs,
